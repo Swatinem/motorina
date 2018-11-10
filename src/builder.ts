@@ -1,9 +1,4 @@
-import {
-  QueryBuilder as IQueryBuilder,
-  Identifier,
-  BindParam,
-  QueryFragment
-} from "./interfaces";
+import { QueryBuilder as IQueryBuilder, Identifier, BindParam, QueryFragment } from "./interfaces";
 
 export class QueryBuilder implements IQueryBuilder {
   private sql = "";
