@@ -1,0 +1,26 @@
+{
+  "name": "motorina",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Arpad Borsos <arpad.borsos@googlemail.com>",
+  "license": "LGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Swatinem/motorina.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Swatinem/motorina/issues"
+  },
+  "homepage": "https://github.com/Swatinem/motorina#readme",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.5",
+    "typescript": "3.1.6"
+  }
+}
