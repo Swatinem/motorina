@@ -2,11 +2,14 @@ import { QueryBuilder as IQueryBuilder, Identifier, BindParam, QueryFragment } f
 import { Dialect, DialectType } from "./dialect";
 
 export class QueryBuilder implements IQueryBuilder {
+  private dialect: Dialect;
   private sql = "";
   private numParams = 0;
   private paramSlots = new Map<string, Array<number>>();
 
-  constructor(private dialect: Dialect) {}
+  constructor(dialect: Dialect) {
+    this.dialect = dialect;
+  }
 
   public pushRaw(sql: string) {
     this.sql += sql;

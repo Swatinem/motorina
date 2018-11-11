@@ -1,5 +1,5 @@
 import resolve from "rollup-plugin-node-resolve";
-import sucrase from "rollup-plugin-sucrase";
+import babel from "rollup-plugin-babel";
 import pkg from "./package.json";
 
 export default {
@@ -15,14 +15,21 @@ export default {
     },
   ],
 
+  // meh, we only import those for their types, but babel leaves the imports
+  // there -_-
+  external: ["mysql", "pg"],
+  treeshake: {
+    pureExternalModules: true,
+  },
+
   plugins: [
     resolve({
       jsnext: true,
       extensions: [".ts"],
     }),
-    sucrase({
+    babel({
       exclude: ["node_modules/**"],
-      transforms: ["typescript"],
+      extensions: [".ts"],
     }),
   ],
 };

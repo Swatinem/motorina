@@ -4,9 +4,12 @@ import { Table } from "./table";
 import { ColumnDefinition } from "./columns";
 
 export class TableBuilder {
+  private name: string;
   private _columns: Columns = {};
 
-  constructor(private name: string) {}
+  constructor(name: string) {
+    this.name = name;
+  }
 
   columns(columns: ColumnDefinition) {
     this._columns = {};

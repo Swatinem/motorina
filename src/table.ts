@@ -18,10 +18,13 @@ interface ExecuteOptions {
 }
 
 export class Table implements QueryFragment {
+  private name: string;
   public readonly _selects: Array<ResultMapping> = [];
   public readonly _where?: Expression;
 
-  constructor(private name: string) {}
+  constructor(name: string) {
+    this.name = name;
+  }
 
   private clone(props: Partial<Table>): Table {
     const table = new Table(this.name);

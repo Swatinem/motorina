@@ -47,6 +47,8 @@ export function getDialect(conn: MySQL | Postgres): Dialect {
       literal(value: unknown) {
         // lolwut? pg only escapes strings, but no other literals?
         if (typeof value === "number") {
+          // TODO: need to figure out if a floating point literal with `.` is
+          // actually valid, well in mysql it is…
           return String(value);
         }
         // Need to figure out something else, how to deal with literal Dates etc…

@@ -31,8 +31,12 @@ export abstract class Expression implements QueryFragment {
 
 function InfixOperator(operator: string) {
   return class extends Expression {
-    constructor(private left: QueryFragment, private right: QueryFragment) {
+    private left: QueryFragment;
+    private right: QueryFragment;
+    constructor(left: QueryFragment, right: QueryFragment) {
       super();
+      this.left = left;
+      this.right = right;
     }
     public build(builder: QueryBuilder) {
       this.left.build(builder);
@@ -44,8 +48,10 @@ function InfixOperator(operator: string) {
 
 function WrappingOperator(before: string, after?: string) {
   return class extends Expression {
-    constructor(private middle: QueryFragment) {
+    private middle: QueryFragment;
+    constructor(middle: QueryFragment) {
       super();
+      this.middle = middle;
     }
     public build(builder: QueryBuilder) {
       builder.pushRaw(before);
@@ -75,8 +81,12 @@ export const Count = WrappingOperator("COUNT(", ")");
 // Atoms
 
 export class Id extends Expression {
-  constructor(private name: string, private table?: string) {
+  private name: string;
+  private table?: string;
+  constructor(name: string, table?: string) {
     super();
+    this.name = name;
+    this.table = table;
   }
   public build(builder: QueryBuilder) {
     const { name, table } = this;
@@ -88,8 +98,10 @@ export function id(name: string, table?: string) {
 }
 
 export class Param extends Expression {
-  constructor(private name: string) {
+  private name: string;
+  constructor(name: string) {
     super();
+    this.name = name;
   }
   public build(builder: QueryBuilder) {
     builder.pushParam({ name: this.name });
@@ -100,8 +112,10 @@ export function param(name: string) {
 }
 
 export class Lit extends Expression {
-  constructor(private value: any) {
+  private value: any;
+  constructor(value: any) {
     super();
+    this.value = value;
   }
   public build(builder: QueryBuilder) {
     builder.pushLiteral(this.value);
