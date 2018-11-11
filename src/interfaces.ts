@@ -14,6 +14,7 @@ export interface Literal {
 export interface QueryBuilder {
   pushRaw(sql: string): void;
   pushIdentifier(id: Identifier): void;
+  pushLiteral(value: unknown): void;
   pushParam(param: BindParam): void;
 }
 
