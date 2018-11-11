@@ -5,8 +5,11 @@ import { QueryFragment, QueryBuilder } from "./interfaces";
 export abstract class Expression implements QueryFragment {
   build(_builder: QueryBuilder) {}
 
-  eq(expr: Expression): Expression {
-    return new Eq(this, expr);
+  eq(expr: Expression | unknown): Expression {
+    if (typeof expr === "object" && expr && "build" in expr) {
+      return new Eq(this, expr as any);
+    }
+    return new Eq(this, new Lit(expr));
   }
 
   and(expr: Expression): Expression {
@@ -41,15 +44,13 @@ function InfixOperator(operator: string) {
   };
 }
 
-function WrappingOperator(before?: string, after?: string) {
+function WrappingOperator(before: string, after?: string) {
   return class extends Expression {
     constructor(private middle: QueryFragment) {
       super();
     }
     public build(builder: QueryBuilder) {
-      if (before) {
-        builder.pushRaw(before);
-      }
+      builder.pushRaw(before);
       this.middle.build(builder);
       if (after) {
         builder.pushRaw(after);

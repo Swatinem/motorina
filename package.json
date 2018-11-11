@@ -19,7 +19,7 @@
   "module": "dist/motorina.esm.js",
   "types": "dist/motorina.d.ts",
   "scripts": {
-    "build": "rimraf dist && rollup -c && cp src/index.d.ts dist/motorina.d.ts",
+    "build": "rimraf dist && rollup -c && cp src/types.d.ts dist/motorina.d.ts",
     "prepublishOnly": "npm run test && npm run build",
     "test": "tsc && jest"
   },

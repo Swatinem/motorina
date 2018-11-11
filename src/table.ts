@@ -2,6 +2,7 @@ import { QueryBuilder as IQueryBuilder, QueryFragment } from "./interfaces";
 import { Columns } from "./columns";
 import { Expression } from "./expression";
 import { QueryBuilder } from "./querybuilder";
+import { getDialect, Connection } from "./dialect";
 
 interface ResultMapping {
   name: string;
@@ -10,8 +11,8 @@ interface ResultMapping {
 }
 
 export class Table implements QueryFragment {
-  public readonly columns: Array<ResultMapping> = [];
-  public readonly where?: Expression;
+  public readonly _columns: Array<ResultMapping> = [];
+  public readonly _where?: Expression;
 
   constructor(private name: string) {}
 
@@ -21,25 +22,29 @@ export class Table implements QueryFragment {
     return table;
   }
 
-  public select(_columns: Columns): Table {
-    const columns = Object.entries(_columns).map(([name, fragment]) => ({ name, fragment }));
-    return this.clone({ columns });
+  public select(columns: Columns): Table {
+    const _columns = Object.entries(columns).map(([name, fragment]) => ({ name, fragment }));
+    return this.clone({ _columns });
   }
 
   public filter(expr: Expression): Table {
-    const where = this.where ? this.where.and(expr) : expr;
-    return this.clone({ where });
+    const _where = this._where ? this._where.and(expr) : expr;
+    return this.clone({ _where });
   }
 
-  public prepare(conn: any) {
-    const builder = new QueryBuilder(conn);
+  // TODO
+  // public prepared() {}
+
+  public execute(conn: Connection) {
+    const dialect = getDialect(conn);
+    const builder = new QueryBuilder(dialect);
     return builder.build(this);
   }
 
   public build(builder: IQueryBuilder) {
     builder.pushRaw("SELECT ");
     let first = true;
-    for (const column of this.columns) {
+    for (const column of this._columns) {
       if (first) {
         first = false;
       } else {
@@ -49,9 +54,9 @@ export class Table implements QueryFragment {
     }
     builder.pushRaw(" FROM ");
     builder.pushIdentifier({ name: this.name });
-    if (this.where) {
+    if (this._where) {
       builder.pushRaw(" WHERE ");
-      this.where.build(builder);
+      this._where.build(builder);
     }
   }
 }

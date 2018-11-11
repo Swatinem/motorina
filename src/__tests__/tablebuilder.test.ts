@@ -1,8 +1,8 @@
-import { TableBuilder } from "../";
+import { Table } from "./";
 
 describe("TableBuilder", () => {
   it("should create a table definition", () => {
-    const { table, columns } = new TableBuilder("foo")
+    const { table, columns } = new Table("foo")
       .columns({
         id: Number,
         name: String,

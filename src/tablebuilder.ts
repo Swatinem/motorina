@@ -1,17 +1,14 @@
-import { ColumnType, Columns } from "./columns";
+import { Columns } from "./columns";
 import { id } from "./expression";
 import { Table } from "./table";
-
-export interface PublicColumns {
-  [key: string]: ColumnType;
-}
+import { ColumnDefinition } from "./columns";
 
 export class TableBuilder {
   private _columns: Columns = {};
 
   constructor(private name: string) {}
 
-  columns(columns: PublicColumns) {
+  columns(columns: ColumnDefinition) {
     this._columns = {};
     // TODO: integrate serializable types correctly
     for (const [name /*type*/] of Object.entries(columns)) {

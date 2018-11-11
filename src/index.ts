@@ -1,2 +1,2 @@
-export { TableBuilder } from "./tablebuilder";
+export { TableBuilder as Table } from "./tablebuilder";
 export { lit } from "./expression";

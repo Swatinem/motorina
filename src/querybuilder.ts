@@ -16,10 +16,8 @@ export class QueryBuilder implements IQueryBuilder {
     if (id.table) {
       this.pushRaw(this.dialect.identifier(id.table));
       this.pushRaw(".");
-      // this.pushRaw(`\`${id.table}\`.`);
     }
     this.pushRaw(this.dialect.identifier(id.name));
-    // this.pushRaw(`\`${id.name}\``);
   }
 
   public pushLiteral(value: unknown) {

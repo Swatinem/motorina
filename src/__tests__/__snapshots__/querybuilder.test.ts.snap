@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`using mysql should build a simple query 1`] = `"SELECT \`test1\`.\`id\`, \`test1\`.\`name\` FROM \`test1\`"`;
+
+exports[`using mysql should correctly escape literals 1`] = `"SELECT \`test1\`.\`id\`, \`test1\`.\`name\` FROM \`test1\` WHERE \`test1\`.\`id\` = 123"`;
+
+exports[`using postgres should build a simple query 1`] = `"SELECT \\"test1\\".\\"id\\", \\"test1\\".\\"name\\" FROM \\"test1\\""`;
+
+exports[`using postgres should correctly escape literals 1`] = `"SELECT \\"test1\\".\\"id\\", \\"test1\\".\\"name\\" FROM \\"test1\\" WHERE \\"test1\\".\\"id\\" = 123"`;
