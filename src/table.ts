@@ -8,10 +8,17 @@ interface ResultMapping {
   name: string;
   fragment: QueryFragment;
   // TODO: integrate types
+  // type: CustomType<any>;
+}
+
+type InspectFn = (args: { sql: string; params: any }) => any;
+
+interface ExecuteOptions {
+  inspect?: InspectFn;
 }
 
 export class Table implements QueryFragment {
-  public readonly _columns: Array<ResultMapping> = [];
+  public readonly _selects: Array<ResultMapping> = [];
   public readonly _where?: Expression;
 
   constructor(private name: string) {}
@@ -23,8 +30,8 @@ export class Table implements QueryFragment {
   }
 
   public select(columns: Columns): Table {
-    const _columns = Object.entries(columns).map(([name, fragment]) => ({ name, fragment }));
-    return this.clone({ _columns });
+    const _selects = Object.entries(columns).map(([name, fragment]) => ({ name, fragment }));
+    return this.clone({ _selects });
   }
 
   public filter(expr: Expression): Table {
@@ -35,22 +42,31 @@ export class Table implements QueryFragment {
   // TODO
   // public prepared() {}
 
-  public execute(conn: Connection) {
+  public execute(conn: Connection, _params: any, { inspect }: ExecuteOptions = {}) {
     const dialect = getDialect(conn);
     const builder = new QueryBuilder(dialect);
-    return builder.build(this);
+    const sql = builder.build(this);
+
+    // TODO: move positional params to the correct position
+    const params = _params;
+
+    if (inspect) {
+      inspect({ sql, params /*, columns*/ });
+    }
+
+    return undefined;
   }
 
   public build(builder: IQueryBuilder) {
     builder.pushRaw("SELECT ");
     let first = true;
-    for (const column of this._columns) {
+    for (const select of this._selects) {
       if (first) {
         first = false;
       } else {
         builder.pushRaw(", ");
       }
-      column.fragment.build(builder);
+      select.fragment.build(builder);
     }
     builder.pushRaw(" FROM ");
     builder.pushIdentifier({ name: this.name });

@@ -1,6 +1,6 @@
 import { Id } from "./expression";
 
-interface CustomType<T> {
+export interface CustomType<T> {
   encode(value: T): number | string;
   decode(value: any): T;
 }

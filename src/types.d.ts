@@ -1,12 +1,13 @@
 // Table Builder Interface
 
 // Column Types
+
 interface CustomType<T> {
   encode(value: T): number | string;
   decode(value: any): T;
 }
 
-type ColumnType = StringConstructor | NumberConstructor | BooleanConstructor | DateConstructor | CustomType<any>;
+type ColumnType = StringConstructor | NumberConstructor | BooleanConstructor | DateConstructor /*| CustomType<any>*/; // TODO: custom types
 
 type TypeOfColumn<T extends ColumnType> = T extends StringConstructor
   ? string
@@ -30,7 +31,12 @@ type MapFromExpression<T extends { [key: string]: Expression<any> }> = {
   [P in keyof T]: T[P] extends Expression<infer U> ? U : never
 };
 
-// TableBuilder
+// Literal helpers
+
+export function lit<T extends number | string | boolean | Date>(value: T): Expression<T>;
+// export declare function lit<T extends ColumnType, U = TypeOfColumn<T>>(value: U, type: T): Expression<T>;
+
+// Table Builder
 
 declare const Table: {};
 interface Table<Name = never, Columns = {}> {
@@ -43,6 +49,8 @@ interface Table<Name = never, Columns = {}> {
   };
 }
 
+export { Table };
+
 // Query Builder Interface
 
 declare class Expression<Type, Table = any> {
@@ -51,7 +59,8 @@ declare class Expression<Type, Table = any> {
   private type: Type;
   private table: Table;
 
-  eq(value: Type): Expression<boolean, Table>;
+  // NOTE: I don’t think we can make this work with custom types for now
+  // eq(value: Type): Expression<boolean, Table>;
   eq<ETable>(expr: Expression<Type, ETable>): Expression<boolean, Table | ETable>;
 
   and<ETable>(expr: Expression<boolean, ETable>): Expression<boolean, Table | ETable>;
@@ -68,10 +77,16 @@ import { Client as Postgres } from "pg";
 
 type Connection = MySQL | Postgres;
 
+type InspectFn = (args: { sql: string; params: any }) => any;
+
+interface ExecuteOptions {
+  inspect?: InspectFn;
+}
+
 interface Execute<ReturnValue> {
   // TODO:
   // prepared(): Execute<ReturnValue>;
-  execute(conn: Connection): Promise<Array<ReturnValue>>;
+  execute(conn: Connection, params?: any, options?: ExecuteOptions): Promise<Array<ReturnValue>>;
 }
 
 // See above comment about missing nominal typing support in TS
@@ -100,9 +115,3 @@ type Filter<Tables, ReturnValue> = Execute<ReturnValue> & {
 // Table
 
 type TableDsl<Tables> = Select<Tables>;
-
-// Exports and helpers
-
-// export declare function lit<T extends number | string | boolean>(): Expression<T>;
-
-export { Table };

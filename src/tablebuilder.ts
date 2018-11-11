@@ -12,7 +12,7 @@ export class TableBuilder {
     this._columns = {};
     // TODO: integrate serializable types correctly
     for (const [name /*type*/] of Object.entries(columns)) {
-      this._columns[name] = id(name, this.name) as any;
+      this._columns[name] = id(name, this.name);
     }
     return this;
   }

@@ -1,15 +1,13 @@
 import { QueryFragment, QueryBuilder } from "./interfaces";
+import { CustomType } from "./columns";
 
 // Generic Expression
 
 export abstract class Expression implements QueryFragment {
   build(_builder: QueryBuilder) {}
 
-  eq(expr: Expression | unknown): Expression {
-    if (typeof expr === "object" && expr && "build" in expr) {
-      return new Eq(this, expr as any);
-    }
-    return new Eq(this, new Lit(expr));
+  eq(expr: Expression): Expression {
+    return new Eq(this, expr);
   }
 
   and(expr: Expression): Expression {
@@ -109,6 +107,9 @@ export class Lit extends Expression {
     builder.pushLiteral(this.value);
   }
 }
-export function lit(value: any) {
+export function lit<T>(value: T, type?: CustomType<T>) {
+  if (type) {
+    return new Lit(type.encode(value));
+  }
   return new Lit(value);
 }
