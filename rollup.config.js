@@ -1,5 +1,5 @@
 import resolve from "rollup-plugin-node-resolve";
-import babel from "rollup-plugin-babel";
+import sucrase from "rollup-plugin-sucrase";
 import pkg from "./package.json";
 
 export default {
@@ -27,9 +27,9 @@ export default {
       jsnext: true,
       extensions: [".ts"],
     }),
-    babel({
+    sucrase({
       exclude: ["node_modules/**"],
-      extensions: [".ts"],
+      transforms: ["typescript"],
     }),
   ],
 };

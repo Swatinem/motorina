@@ -24,23 +24,18 @@
     "test": "tsc && jest"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.5",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/preset-env": "^7.1.5",
-    "@babel/preset-typescript": "^7.1.0",
     "@types/jest": "^23.3.9",
     "@types/mysql": "^2.15.5",
     "@types/node": "^10.12.5",
     "@types/pg": "^7.4.11",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^23.6.0",
     "jest": "^23.6.0",
     "mysql": "^2.16.0",
     "pg": "^7.6.1",
     "prettier": "^1.15.2",
     "rollup": "^0.67.1",
-    "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-sucrase": "^2.0.0",
+    "ts-jest": "^23.10.4",
     "typescript": "3.1.6"
   },
   "jest": {
@@ -63,7 +58,7 @@
       "node"
     ],
     "transform": {
-      "^.+\\.(t|j)sx?$": "babel-jest"
+      "^.+\\.(t|j)sx?$": "ts-jest"
     },
     "transformIgnorePatterns": [
       "/node_modules/"
@@ -71,27 +66,16 @@
     "testMatch": [
       "**/__tests__/**/*.+(spec|test).(ts|tsx)",
       "**/?(*.)+(spec|test).(ts|tsx)"
-    ]
+    ],
+    "globals": {
+      "ts-jest": {
+        "diagnostics": false,
+        "isolatedModules": true
+      }
+    }
   },
   "prettier": {
     "printWidth": 120,
     "trailingComma": "all"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "shippedProposals": true,
-          "targets": {
-            "node": true
-          }
-        }
-      ],
-      "@babel/preset-typescript"
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-class-properties"
-    ]
   }
 }
