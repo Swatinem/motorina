@@ -1,35 +1,26 @@
+// @ts-check
+
+import dts from "rollup-plugin-dts";
 import resolve from "rollup-plugin-node-resolve";
-import sucrase from "rollup-plugin-sucrase";
 import pkg from "./package.json";
 
-export default {
-  input: "./src/index.ts",
-  output: [
-    {
-      file: pkg.main,
-      format: "cjs",
-    },
-    {
-      file: pkg.module,
-      format: "es",
-    },
-  ],
+const external = ["pg", "mysql"];
 
-  // meh, we only import those for their types, but babel leaves the imports
-  // there -_-
-  external: ["mysql", "pg"],
-  treeshake: {
-    pureExternalModules: true,
+/** @type {Array<import("rollup").RollupWatchOptions>} */
+const config = [
+  {
+    input: "./.build/index.js",
+    output: [{ exports: "named", file: pkg.main, format: "cjs" }, { file: pkg.module, format: "es" }],
+
+    external,
+
+    plugins: [resolve()],
   },
+  {
+    input: "./.build/index.d.ts",
+    output: [{ file: pkg.types, format: "es" }],
+    plugins: [dts()],
+  },
+];
 
-  plugins: [
-    resolve({
-      jsnext: true,
-      extensions: [".ts"],
-    }),
-    sucrase({
-      exclude: ["node_modules/**"],
-      transforms: ["typescript"],
-    }),
-  ],
-};
+export default config;

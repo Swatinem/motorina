@@ -19,26 +19,37 @@
   "module": "dist/motorina.esm.js",
   "types": "dist/motorina.d.ts",
   "scripts": {
-    "build": "rimraf dist && rollup -c && cp src/types.d.ts dist/motorina.d.ts",
-    "prepublishOnly": "npm run test && npm run build",
-    "test": "tsc && jest"
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
+    "build": "tsc --project tsconfig.build.json && rollup -c",
+    "pretest": "npm run build",
+    "test": "jest --runInBand",
+    "prepublishOnly": "npm run test"
+  },
+  "dependencies": {
+    "sqlstring": "^2.3.1"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.9",
-    "@types/mysql": "^2.15.5",
-    "@types/node": "^10.12.5",
-    "@types/pg": "^7.4.11",
-    "jest": "^23.6.0",
-    "mysql": "^2.16.0",
-    "pg": "^7.6.1",
-    "prettier": "^1.15.2",
-    "rollup": "^0.67.1",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-sucrase": "^2.0.0",
-    "ts-jest": "^23.10.4",
-    "typescript": "3.1.6"
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.0.10",
+    "@types/sqlstring": "^2.2.1",
+    "jest": "^24.8.0",
+    "prettier": "^1.18.2",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.16.2",
+    "rollup-plugin-dts": "^1.1.4",
+    "rollup-plugin-node-resolve": "^5.0.4",
+    "ts-jest": "^24.0.2",
+    "typescript": "3.5.2"
+  },
+  "_devDependencies": {
+    "@types/mysql": "^2.15.6",
+    "@types/pg": "^7.4.14",
+    "mysql": "^2.17.1",
+    "pg": "^7.11.0"
   },
   "jest": {
+    "preset": "ts-jest/presets/js-with-ts",
     "collectCoverage": true,
     "coverageReporters": [
       "html",
@@ -46,33 +57,15 @@
       "text-summary"
     ],
     "coveragePathIgnorePatterns": [
-      "src/__tests__",
-      "/node_modules/"
+      "tests",
+      "node_modules"
     ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ],
-    "transform": {
-      "^.+\\.(t|j)sx?$": "ts-jest"
-    },
-    "transformIgnorePatterns": [
-      "/node_modules/"
+    "testPathIgnorePatterns": [
+      "/src-old/"
     ],
     "testMatch": [
-      "**/__tests__/**/*.+(spec|test).(ts|tsx)",
       "**/?(*.)+(spec|test).(ts|tsx)"
-    ],
-    "globals": {
-      "ts-jest": {
-        "diagnostics": false,
-        "isolatedModules": true
-      }
-    }
+    ]
   },
   "prettier": {
     "printWidth": 120,
